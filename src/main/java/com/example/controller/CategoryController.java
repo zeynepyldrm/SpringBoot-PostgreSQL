@@ -27,6 +27,11 @@ public class CategoryController {
     public CategoryDto getCategoryById(@PathVariable(name = "id") Long id){
         return categoryService.getById(id);
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<Category> update(@PathVariable(value = "id") Long id,@Validated @RequestBody CategoryDto categoryDto){
+         Category updated= categoryService.updateCategory(id,categoryDto);
+         return ResponseEntity.ok(updated);
+    }
 
     @DeleteMapping("/{id}")
     public void deleteCategory(@PathVariable(name = "id") Long id){

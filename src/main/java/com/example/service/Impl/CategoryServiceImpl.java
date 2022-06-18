@@ -7,12 +7,15 @@ import com.example.repository.CategoryRepository;
 import com.example.repository.ProductRepository;
 import com.example.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.lang.module.ResolutionException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -78,11 +81,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<CategoryDto> getAll(Pageable pageable) {
-        return null;
-    }
-
-    @Override
     public HttpStatus deleteCategory(Long id) {
         try {
             categoryRepository.deleteById(id);
@@ -93,4 +91,20 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    @Override
+    public Category updateCategory(Long id ,CategoryDto categoryDto) {
+        Category category=categoryRepository.findById(id).orElseThrow(()->new ResolutionException("Employee not found for this id :: " + id));
+        List<Product>products=new ArrayList<>();
+        //final Product product;
+        category.setCategoryName(categoryDto.getCategoryName());
+        category.setId(categoryDto.getId());
+        categoryDto.getProducts().forEach(item->{
+            Product product=new Product();
+            product.setProductName(item);
+            products.add(product);
+        });
+        category.setProducts(products);
+        final Category updated =categoryRepository.save(category);
+        return updated;
+    }
 }

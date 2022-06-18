@@ -13,6 +13,6 @@ public interface CategoryService {
     CategoryDto save(CategoryDto categoryDto);
     List<CategoryDto> getAll();
     CategoryDto getById(Long id);
-    Page<CategoryDto> getAll(Pageable pageable);
     HttpStatus deleteCategory(Long id);
+    Category updateCategory(Long id,CategoryDto categoryDto);
 }

@@ -22,7 +22,7 @@ public class Category implements Serializable {
         @Column(length = 500,name = "category_name")
         private String categoryName;
 
-        @OneToMany
+        @OneToMany(cascade = {CascadeType.ALL})
         @JoinColumn(name = "category_id")
         private List<Product> products;
 }
