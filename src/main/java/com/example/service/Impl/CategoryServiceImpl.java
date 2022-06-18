@@ -9,11 +9,13 @@ import com.example.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,9 +59,38 @@ public class CategoryServiceImpl implements CategoryService {
         });
         return  categoryDtos;
     }
+    @Override
+    public CategoryDto getById(Long id) {
+        Optional<Category> optional=categoryRepository.findById(id);
+        CategoryDto dto=new CategoryDto();
+        if(optional.isPresent()){
+            List<String>products=new ArrayList<>();
+            Category cat=optional.get();
+            dto.setId(cat.getId());
+            dto.setCategoryName(cat.getCategoryName());
+            cat.getProducts().forEach(item-> products.add(item.getProductName()));
+            dto.setProducts(products);
+        }
+        else{
+            throw new RuntimeException("Category not exist by id");
+        }
+        return  dto;
+    }
 
     @Override
     public Page<CategoryDto> getAll(Pageable pageable) {
         return null;
     }
+
+    @Override
+    public HttpStatus deleteCategory(Long id) {
+        try {
+            categoryRepository.deleteById(id);
+            return HttpStatus.valueOf(200);
+        }
+        catch (Exception ex){
+            return HttpStatus.valueOf(500);
+        }
+    }
+
 }

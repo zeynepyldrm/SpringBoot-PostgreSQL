@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.dto.CategoryDto;
+import com.example.model.Category;
 import com.example.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,5 +22,14 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllList(){
         return  ResponseEntity.ok(categoryService.getAll());
+    }
+    @GetMapping("/{id}")
+    public CategoryDto getCategoryById(@PathVariable(name = "id") Long id){
+        return categoryService.getById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCategory(@PathVariable(name = "id") Long id){
+        categoryService.deleteCategory(id);
     }
 }
