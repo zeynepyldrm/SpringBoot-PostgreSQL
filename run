@@ -1,0 +1,6 @@
+
+#!/bin/bash  
+sudo docker stop db && sudo docker rm db
+sudo docker stop app && sudo docker rm app
+sudo docker-compose build 
+sudo docker-compose -f docker-compose.yml up -d
